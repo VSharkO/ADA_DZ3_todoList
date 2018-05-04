@@ -28,4 +28,5 @@ public class FakeDatabase {
 	public void delete(Task task) {
 		mTasks.remove(task);
 	}
+
 }

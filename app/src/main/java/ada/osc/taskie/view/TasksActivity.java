@@ -1,7 +1,10 @@
 package ada.osc.taskie.view;
 
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,7 +28,6 @@ public class TasksActivity extends AppCompatActivity {
 	private static final String TAG = TasksActivity.class.getSimpleName();
 	private static final int REQUEST_NEW_TASK = 10;
 	public static final String EXTRA_TASK = "task";
-
 	TaskRepository mRepository = TaskRepository.getInstance();
 	TaskAdapter mTaskAdapter;
 
@@ -39,11 +41,27 @@ public class TasksActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onLongClick(Task task) {
-			mRepository.removeTask(task);
-			updateTasksDisplay();
+		public void onLongClick(final Task task) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(TasksActivity.this);
+			builder.setTitle(R.string.options)
+					.setItems(R.array.optons_array, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							if(which==0){
+								mRepository.removeTask(task);
+								updateTasksDisplay();
+							}else{
+								Intent newTask = new Intent();
+								newTask.setClass(TasksActivity.this, NewTaskActivity.class);
+								newTask.putExtra(EXTRA_TASK,task);
+								startActivityForResult(newTask, REQUEST_NEW_TASK);
+								mRepository.removeTask(task);
+							}
+
+						}
+					}).show();
 		}
 	};
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +107,7 @@ public class TasksActivity extends AppCompatActivity {
 	private void toastTask(Task task) {
 		Toast.makeText(
 				this,
-				task.getTitle() + "\n" + task.getDescription()+"\n"+task.getPickedDate(),
+				task.getTitle() + "\n" + task.getDescription()+"\n"+task.getPickedDateString(),
 				Toast.LENGTH_SHORT
 		).show();
 	}

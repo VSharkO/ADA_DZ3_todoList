@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="optons_array">
+    <item name="delete">delete</item>
+    <item name="update">update</item>
+    </string-array>
+</resources>

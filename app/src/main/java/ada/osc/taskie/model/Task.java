@@ -69,7 +69,7 @@ public class Task implements Serializable{
 		mPriority = priority;
 	}
 
-	public String getPickedDate() {
+	public String getPickedDateString() {
 		if(mPickedDate!=null) {
 			String day = String.valueOf(mPickedDate.get(Calendar.DATE));
 			String month = String.valueOf(mPickedDate.get(Calendar.MONTH)+1);
@@ -79,6 +79,10 @@ public class Task implements Serializable{
 		}else{
 			return "No end date";
 		}
+	}
+
+	public Calendar getPickedDate() {
+		return mPickedDate;
 	}
 
 	public void setPickedDate(Calendar mPickedDate) {

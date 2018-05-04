@@ -36,4 +36,5 @@ public class TaskRepository {
 	public void removeTask(Task task) {
 		mDatabase.delete(task);
 	}
+
 }
