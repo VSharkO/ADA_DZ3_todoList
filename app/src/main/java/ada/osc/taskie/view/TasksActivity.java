@@ -52,16 +52,19 @@ public class TasksActivity extends AppCompatActivity {
 							}else{
 								Intent newTask = new Intent();
 								newTask.setClass(TasksActivity.this, NewTaskActivity.class);
-								newTask.putExtra(EXTRA_TASK,task);
-								startActivityForResult(newTask, REQUEST_NEW_TASK);
-								mRepository.removeTask(task);
+								newTask.putExtra(EXTRA_TASK,task.getId());
+								startActivity(newTask);
 							}
-
 						}
 					}).show();
 		}
 	};
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		updateTasksDisplay();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +117,11 @@ public class TasksActivity extends AppCompatActivity {
 
 	@OnClick(R.id.fab_tasks_addNew)
 	public void startNewTaskActivity(){
+
 		Intent newTask = new Intent();
 		newTask.setClass(this, NewTaskActivity.class);
 		startActivityForResult(newTask, REQUEST_NEW_TASK);
+
 	}
 
 	@Override

@@ -3,14 +3,17 @@ package ada.osc.taskie.view;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import java.util.Calendar;
 
 import ada.osc.taskie.R;
+import ada.osc.taskie.TaskRepository;
 import ada.osc.taskie.model.Task;
 import ada.osc.taskie.model.TaskPriority;
 import butterknife.BindView;
@@ -23,7 +26,9 @@ public class NewTaskActivity extends AppCompatActivity {
 	@BindView(R.id.edittext_newtask_description) EditText mDescriptionEntry;
 	@BindView(R.id.spinner_newtask_priority) Spinner mPriorityEntry;
 	@BindView(R.id.button_newtask_pickdate) Button pickEndDate;
+	@BindView(R.id.imagebutton_newtask_savetask) ImageButton saveButton;
 	Calendar pickedDate = null;
+
 
 	private static final int PICK_DATE = 20;
 	public static final String PICKED_DATE = "date";
@@ -34,16 +39,33 @@ public class NewTaskActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_task);
 		ButterKnife.bind(this);
+		final boolean update;
+
 		if(getIntent().getExtras()!=null){
+			update=true;
 			setUpFields();
+		}else{
+			update=false;
 		}
+
 		setUpSpinnerSource();
 
-
+		saveButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if(update){
+					updateTask(getIntent().getIntExtra(TasksActivity.EXTRA_TASK,-1));
+				}else{
+					saveTask();
+				}
+			}
+		});
 	}
 
+
+
 	private void setUpFields() {
-		Task updateTask=(Task)getIntent().getSerializableExtra(TasksActivity.EXTRA_TASK);
+		int TaskId=getIntent().getIntExtra(TasksActivity.EXTRA_TASK,-1);
+		Task updateTask=TaskRepository.getInstance().getTask(TaskId);
 		pickedDate = Calendar.getInstance();
 		mTitleEntry.setText(updateTask.getTitle());
 		mDescriptionEntry.setText(updateTask.getDescription());
@@ -51,7 +73,6 @@ public class NewTaskActivity extends AppCompatActivity {
 		if(updateTask.getPickedDate()!=null)
 		pickedDate.set(updateTask.getPickedDate().get(Calendar.YEAR),updateTask.getPickedDate()
 				.get(Calendar.MONTH),updateTask.getPickedDate().get(Calendar.DAY_OF_MONTH));
-
 	}
 
 
@@ -64,7 +85,6 @@ public class NewTaskActivity extends AppCompatActivity {
 		mPriorityEntry.setSelection(0);
 	}
 
-	@OnClick(R.id.imagebutton_newtask_savetask)
 	public void saveTask(){
 		String title = mTitleEntry.getText().toString();
 		String description = mDescriptionEntry.getText().toString();
@@ -80,6 +100,23 @@ public class NewTaskActivity extends AppCompatActivity {
 				saveTaskIntent.putExtra(TasksActivity.EXTRA_TASK, newTask);
 				setResult(RESULT_OK, saveTaskIntent);
 				finish();
+		}
+	}
+
+	public void updateTask(int id){
+		String title = mTitleEntry.getText().toString();
+		String description = mDescriptionEntry.getText().toString();
+		TaskPriority priority = (TaskPriority) mPriorityEntry.getSelectedItem();
+		TaskRepository repository= TaskRepository.getInstance();
+		if(!title.equals("")&&!description.equals("")) {
+			repository.getTask(id).setTitle(title);
+			repository.getTask(id).setDescription(description);
+			repository.getTask(id).setPriority(priority);
+
+			if (pickedDate != null)
+				repository.getTask(id).setPickedDate(pickedDate);
+
+			finish();
 		}
 	}
 

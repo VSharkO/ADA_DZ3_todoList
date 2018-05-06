@@ -17,6 +17,10 @@ public class FakeDatabase {
 		return new ArrayList<>(mTasks);
 	}
 
+	public Task getTask(int id){
+		return mTasks.get(id);
+	}
+
 	public void save(Task task){
 		mTasks.add(task);
 	}

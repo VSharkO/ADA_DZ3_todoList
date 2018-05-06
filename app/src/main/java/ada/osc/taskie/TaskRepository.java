@@ -33,6 +33,10 @@ public class TaskRepository {
 		mDatabase.save(task);
 	}
 
+	public Task getTask(int id){
+		return mDatabase.getTask(id);
+	}
+
 	public void removeTask(Task task) {
 		mDatabase.delete(task);
 	}
