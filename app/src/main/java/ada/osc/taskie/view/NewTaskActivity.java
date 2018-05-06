@@ -27,7 +27,7 @@ public class NewTaskActivity extends AppCompatActivity {
 	@BindView(R.id.spinner_newtask_priority) Spinner mPriorityEntry;
 	@BindView(R.id.button_newtask_pickdate) Button pickEndDate;
 	@BindView(R.id.imagebutton_newtask_savetask) ImageButton saveButton;
-	Calendar pickedDate = null;
+	Calendar pickedDate;
 
 
 	private static final int PICK_DATE = 20;
@@ -40,7 +40,7 @@ public class NewTaskActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_new_task);
 		ButterKnife.bind(this);
 		final boolean update;
-
+		pickedDate = null;
 		if(getIntent().getExtras()!=null){
 			update=true;
 			setUpFields();
@@ -66,13 +66,14 @@ public class NewTaskActivity extends AppCompatActivity {
 	private void setUpFields() {
 		int TaskId=getIntent().getIntExtra(TasksActivity.EXTRA_TASK,-1);
 		Task updateTask=TaskRepository.getInstance().getTask(TaskId);
-		pickedDate = Calendar.getInstance();
 		mTitleEntry.setText(updateTask.getTitle());
 		mDescriptionEntry.setText(updateTask.getDescription());
 		mPriorityEntry.setSelection(updateTask.getPriority().ordinal());
-		if(updateTask.getPickedDate()!=null)
-		pickedDate.set(updateTask.getPickedDate().get(Calendar.YEAR),updateTask.getPickedDate()
-				.get(Calendar.MONTH),updateTask.getPickedDate().get(Calendar.DAY_OF_MONTH));
+		if(updateTask.getPickedDate()!=null) {
+			pickedDate = Calendar.getInstance();
+			pickedDate.set(updateTask.getPickedDate().get(Calendar.YEAR), updateTask.getPickedDate()
+					.get(Calendar.MONTH), updateTask.getPickedDate().get(Calendar.DAY_OF_MONTH));
+		}
 	}
 
 
@@ -107,14 +108,13 @@ public class NewTaskActivity extends AppCompatActivity {
 		String title = mTitleEntry.getText().toString();
 		String description = mDescriptionEntry.getText().toString();
 		TaskPriority priority = (TaskPriority) mPriorityEntry.getSelectedItem();
-		TaskRepository repository= TaskRepository.getInstance();
+		Task task= TaskRepository.getInstance().getTask(id);
 		if(!title.equals("")&&!description.equals("")) {
-			repository.getTask(id).setTitle(title);
-			repository.getTask(id).setDescription(description);
-			repository.getTask(id).setPriority(priority);
-
-			if (pickedDate != null)
-				repository.getTask(id).setPickedDate(pickedDate);
+			task.setTitle(title);
+			task.setDescription(description);
+			task.setPriority(priority);
+			if(pickedDate!=null)
+			task.setPickedDate(pickedDate);
 
 			finish();
 		}
