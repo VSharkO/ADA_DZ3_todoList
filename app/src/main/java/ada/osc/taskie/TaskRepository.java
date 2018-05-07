@@ -41,4 +41,7 @@ public class TaskRepository {
 		mDatabase.delete(task);
 	}
 
+	public void setIDs() {
+		mDatabase.setIDs();
+	}
 }

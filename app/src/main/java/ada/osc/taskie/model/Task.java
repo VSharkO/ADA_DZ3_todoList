@@ -9,7 +9,7 @@ public class Task implements Serializable{
 
 	private static int sID = 0;
 
-	int mId;
+	int mId=sID;
 	private String mTitle;
 	private String mDescription;
 	private boolean mCompleted;
@@ -17,7 +17,6 @@ public class Task implements Serializable{
 	private Calendar mPickedDate;
 
 	public Task(String title, String description, TaskPriority priority, Calendar PickedDate) {
-		mId = sID++;
 		mTitle = title;
 		mDescription = description;
 		mCompleted = false;
@@ -25,18 +24,7 @@ public class Task implements Serializable{
 		mPickedDate=PickedDate;
 	}
 
-	public Task(String title, String description, TaskPriority priority, Calendar PickedDate, boolean Completed) {
-		mId = sID++;
-		mTitle = title;
-		mDescription = description;
-		mCompleted = Completed;
-		mPriority = priority;
-		mPickedDate=PickedDate;
-	}
-
-
 	public Task(String title, String description, TaskPriority priority) {
-		mId = sID++;
 		mTitle = title;
 		mDescription = description;
 		mCompleted = false;
@@ -112,5 +100,9 @@ public class Task implements Serializable{
 				setPriority(TaskPriority.LOW);
 				break;
 		}
+	}
+
+	public void setID(int id){
+		mId = id;
 	}
 }

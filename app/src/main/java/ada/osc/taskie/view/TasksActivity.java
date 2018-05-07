@@ -51,8 +51,10 @@ public class TasksActivity extends AppCompatActivity {
 							if(which==0){
 								mRepository.removeTask(task);
 								updateTasksDisplay();
-							}else{
+
+							}else if(which==1){
 								updateTaskActivity(task.getId());
+								updateTasksDisplay();
 							}
 						}
 					}).show();
@@ -115,6 +117,7 @@ public class TasksActivity extends AppCompatActivity {
 		for (Task t : tasks){
 			Log.d(TAG, t.getTitle());
 		}
+		mRepository.setIDs();
 	}
 
 	private void toastTask(Task task) {
@@ -135,11 +138,11 @@ public class TasksActivity extends AppCompatActivity {
 
 	}
 
-	public void updateTaskActivity(int taskID){
+	public void updateTaskActivity(int taskIndex){
 
 		Intent newTask = new Intent();
 		newTask.setClass(TasksActivity.this, NewTaskActivity.class);
-		newTask.putExtra(EXTRA_TASK,taskID);
+		newTask.putExtra(EXTRA_TASK,taskIndex);
 		startActivity(newTask);
 
 	}

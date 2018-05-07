@@ -53,7 +53,7 @@ public class NewTaskActivity extends AppCompatActivity {
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(update){
-					updateTask(getIntent().getIntExtra(TasksActivity.EXTRA_TASK,-1));
+					updateTask(getIntent().getIntExtra(TasksActivity.EXTRA_TASK,PICK_DATE));
 				}else{
 					saveTask();
 				}
@@ -64,7 +64,7 @@ public class NewTaskActivity extends AppCompatActivity {
 
 
 	private void setUpFields() {
-		int TaskId=getIntent().getIntExtra(TasksActivity.EXTRA_TASK,-1);
+		int TaskId=getIntent().getIntExtra(TasksActivity.EXTRA_TASK,PICK_DATE);
 		Task updateTask=TaskRepository.getInstance().getTask(TaskId);
 		mTitleEntry.setText(updateTask.getTitle());
 		mDescriptionEntry.setText(updateTask.getDescription());
@@ -108,14 +108,13 @@ public class NewTaskActivity extends AppCompatActivity {
 		String title = mTitleEntry.getText().toString();
 		String description = mDescriptionEntry.getText().toString();
 		TaskPriority priority = (TaskPriority) mPriorityEntry.getSelectedItem();
-		Task task= TaskRepository.getInstance().getTask(id);
+		Task task = TaskRepository.getInstance().getTask(id);
 		if(!title.equals("")&&!description.equals("")) {
 			task.setTitle(title);
 			task.setDescription(description);
 			task.setPriority(priority);
 			if(pickedDate!=null)
 			task.setPickedDate(pickedDate);
-
 			finish();
 		}
 	}

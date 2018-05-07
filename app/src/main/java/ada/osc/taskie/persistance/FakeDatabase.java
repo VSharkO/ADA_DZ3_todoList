@@ -33,4 +33,11 @@ public class FakeDatabase {
 		mTasks.remove(task);
 	}
 
+	public void setIDs() {
+		int i=0;
+		for(Task t : mTasks){
+			t.setID(i);
+			i++;
+		}
+	}
 }
