@@ -12,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class TasksActivity extends AppCompatActivity {
 	@BindView(R.id.fab_tasks_addNew) FloatingActionButton mNewTask;
 	@BindView(R.id.recycler_tasks) RecyclerView mTasksRecycler;
 
+
 	TaskClickListener mListener = new TaskClickListener() {
 		@Override
 		public void onClick(Task task) {
@@ -50,13 +52,21 @@ public class TasksActivity extends AppCompatActivity {
 								mRepository.removeTask(task);
 								updateTasksDisplay();
 							}else{
-								Intent newTask = new Intent();
-								newTask.setClass(TasksActivity.this, NewTaskActivity.class);
-								newTask.putExtra(EXTRA_TASK,task.getId());
-								startActivity(newTask);
+								updateTaskActivity(task.getId());
 							}
 						}
 					}).show();
+		}
+
+		@Override
+		public void onPriorityClick(Task task) {
+			task.changePriority();
+			updateTasksDisplay();
+		}
+
+		@Override
+		public void onIsCompletedClick(Task task){
+			task.setCompleted(!task.isCompleted());
 		}
 	};
 
@@ -110,7 +120,8 @@ public class TasksActivity extends AppCompatActivity {
 	private void toastTask(Task task) {
 		Toast.makeText(
 				this,
-				task.getTitle() + "\n" + task.getDescription()+"\n"+task.getPickedDateString(),
+				task.getTitle() + "\n" + task.getDescription()+"\n"+task.getPickedDateString()
+						+ "\n" + task.isCompleted() + "\n"+task.getPriority(),
 				Toast.LENGTH_SHORT
 		).show();
 	}
@@ -121,6 +132,15 @@ public class TasksActivity extends AppCompatActivity {
 		Intent newTask = new Intent();
 		newTask.setClass(this, NewTaskActivity.class);
 		startActivityForResult(newTask, REQUEST_NEW_TASK);
+
+	}
+
+	public void updateTaskActivity(int taskID){
+
+		Intent newTask = new Intent();
+		newTask.setClass(TasksActivity.this, NewTaskActivity.class);
+		newTask.putExtra(EXTRA_TASK,taskID);
+		startActivity(newTask);
 
 	}
 

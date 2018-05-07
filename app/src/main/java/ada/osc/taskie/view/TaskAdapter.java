@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 		Task current = mTasks.get(position);
 		holder.mTitle.setText(current.getTitle());
 		holder.mDescription.setText(current.getDescription());
-
+		holder.mTaskDone.setChecked(current.isCompleted());
 		int color = R.color.taskPriority_Unknown;
 		switch (current.getPriority()){
 			case LOW: color = R.color.taskpriority_low; break;
@@ -69,6 +70,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 		@BindView(R.id.textview_task_title) TextView mTitle;
 		@BindView(R.id.textview_task_description) TextView mDescription;
 		@BindView(R.id.imageview_task_priority) ImageView mPriority;
+		@BindView(R.id.checkBox_taskDone) CheckBox mTaskDone;
 
 		public TaskViewHolder(View itemView, TaskClickListener listener) {
 			super(itemView);
@@ -85,5 +87,16 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 			mListener.onLongClick(mTasks.get(getAdapterPosition()));
 			return true;
 		}
+
+		@OnClick(R.id.checkBox_taskDone)
+		public void taskDone() {
+				mListener.onIsCompletedClick(mTasks.get(getAdapterPosition()));
+			}
+
+		@OnClick(R.id.imageview_task_priority)
+		public void onPriorityClick() {
+			mListener.onPriorityClick(mTasks.get(getAdapterPosition()));
+		}
+
 	}
 }

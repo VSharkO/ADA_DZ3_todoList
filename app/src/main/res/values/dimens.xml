@@ -5,4 +5,5 @@
     <dimen name="textSize_normal">20sp</dimen>
     <dimen name="task_taskPriority_width">50dp</dimen>
     <dimen name="lightPadding">5dp</dimen>
+    <dimen name="marginMid">20dp</dimen>
 </resources>

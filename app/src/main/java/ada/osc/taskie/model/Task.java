@@ -25,6 +25,16 @@ public class Task implements Serializable{
 		mPickedDate=PickedDate;
 	}
 
+	public Task(String title, String description, TaskPriority priority, Calendar PickedDate, boolean Completed) {
+		mId = sID++;
+		mTitle = title;
+		mDescription = description;
+		mCompleted = Completed;
+		mPriority = priority;
+		mPickedDate=PickedDate;
+	}
+
+
 	public Task(String title, String description, TaskPriority priority) {
 		mId = sID++;
 		mTitle = title;
@@ -87,5 +97,20 @@ public class Task implements Serializable{
 
 	public void setPickedDate(Calendar mPickedDate) {
 		this.mPickedDate = mPickedDate;
+	}
+
+	public void changePriority(){
+
+		switch (mPriority.toString()) {
+			case "LOW":
+				setPriority(TaskPriority.MEDIUM);
+				break;
+			case "MEDIUM":
+				setPriority(TaskPriority.HIGH);
+				break;
+			case "HIGH":
+				setPriority(TaskPriority.LOW);
+				break;
+		}
 	}
 }
