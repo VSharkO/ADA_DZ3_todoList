@@ -42,6 +42,14 @@ public class TaskRepository {
 	}
 
 	public void setIDs() {
-		mDatabase.setIDs();
+		mDatabase.setIDsAll();
+	}
+
+	public void getSorted(){
+		mDatabase.sortAll();
+	}
+
+	public List<Task> getUncompleted() {
+		return mDatabase.getUncompleted();
 	}
 }

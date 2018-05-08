@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="@string/sort"
+        android:icon="@mipmap/ic_launcher"
+        android:id="@+id/menuSortItem"
+        app:showAsAction="never"
+        />
+    <item android:title="@string/showUncompleted"
+        android:icon="@mipmap/ic_launcher"
+        android:id="@+id/menuHideCompletedItem"
+        app:showAsAction="never"
+        />
+</menu>

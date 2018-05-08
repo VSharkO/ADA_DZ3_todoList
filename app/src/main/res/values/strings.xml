@@ -6,4 +6,8 @@
     <string name="Ok">OK</string>
     <string name="setdate">Set date</string>
     <string name="options">options</string>
+    <string name="sort">Sort</string>
+    <string name="showUncompleted">Hide completed</string>
+    <string name="unsorted">unsorted</string>
+    <string name="showAll">Show all</string>
 </resources>

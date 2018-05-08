@@ -23,13 +23,14 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
 	private List<Task> mTasks;
 	private TaskClickListener mListener;
+	boolean showUncompleted;
 
 	public TaskAdapter(TaskClickListener listener) {
 		mListener = listener;
 		mTasks = new ArrayList<>();
 	}
 
-	public void updateTasks(List<Task> tasks){
+	public void updateTasks(List<Task> tasks) {
 		mTasks.clear();
 		mTasks.addAll(tasks);
 		notifyDataSetChanged();
@@ -51,10 +52,16 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 		holder.mDescription.setText(current.getDescription());
 		holder.mTaskDone.setChecked(current.isCompleted());
 		int color = R.color.taskPriority_Unknown;
-		switch (current.getPriority()){
-			case LOW: color = R.color.taskpriority_low; break;
-			case MEDIUM: color = R.color.taskpriority_medium; break;
-			case HIGH: color = R.color.taskpriority_high; break;
+		switch (current.getPriority()) {
+			case LOW:
+				color = R.color.taskpriority_low;
+				break;
+			case MEDIUM:
+				color = R.color.taskpriority_medium;
+				break;
+			case HIGH:
+				color = R.color.taskpriority_high;
+				break;
 		}
 
 		holder.mPriority.setImageResource(color);
@@ -67,10 +74,14 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
 	class TaskViewHolder extends RecyclerView.ViewHolder {
 
-		@BindView(R.id.textview_task_title) TextView mTitle;
-		@BindView(R.id.textview_task_description) TextView mDescription;
-		@BindView(R.id.imageview_task_priority) ImageView mPriority;
-		@BindView(R.id.checkBox_taskDone) CheckBox mTaskDone;
+		@BindView(R.id.textview_task_title)
+		TextView mTitle;
+		@BindView(R.id.textview_task_description)
+		TextView mDescription;
+		@BindView(R.id.imageview_task_priority)
+		ImageView mPriority;
+		@BindView(R.id.checkBox_taskDone)
+		CheckBox mTaskDone;
 
 		public TaskViewHolder(View itemView, TaskClickListener listener) {
 			super(itemView);
@@ -78,25 +89,36 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 		}
 
 		@OnClick
-		public void onTaskClick(){
+		public void onTaskClick() {
 			mListener.onClick(mTasks.get(getAdapterPosition()));
 		}
 
 		@OnLongClick
-		public boolean onTaskLongClick(){
+		public boolean onTaskLongClick() {
 			mListener.onLongClick(mTasks.get(getAdapterPosition()));
 			return true;
 		}
 
 		@OnClick(R.id.checkBox_taskDone)
 		public void taskDone() {
-				mListener.onIsCompletedClick(mTasks.get(getAdapterPosition()));
-			}
+			mListener.onIsCompletedClick(mTasks.get(getAdapterPosition()));
+		}
 
 		@OnClick(R.id.imageview_task_priority)
 		public void onPriorityClick() {
 			mListener.onPriorityClick(mTasks.get(getAdapterPosition()));
 		}
 
+	}
+
+	public void showUNcompleted() {
+		if (showUncompleted) {
+			for (Task task : mTasks) {
+				if (task.isCompleted()){
+					mTasks.remove(task);
+				}
+
+			}
+		}
 	}
 }

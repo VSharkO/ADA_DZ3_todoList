@@ -11,10 +11,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.CheckBox;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
-
 import java.util.List;
 
 import ada.osc.taskie.R;
@@ -31,10 +32,10 @@ public class TasksActivity extends AppCompatActivity {
 	public static final String EXTRA_TASK = "task";
 	TaskRepository mRepository = TaskRepository.getInstance();
 	TaskAdapter mTaskAdapter;
-
+	boolean sorted,uncompleted;
 	@BindView(R.id.fab_tasks_addNew) FloatingActionButton mNewTask;
 	@BindView(R.id.recycler_tasks) RecyclerView mTasksRecycler;
-
+	@BindView(R.id.my_toolbar) Toolbar myToolbar;
 
 	TaskClickListener mListener = new TaskClickListener() {
 		@Override
@@ -44,6 +45,7 @@ public class TasksActivity extends AppCompatActivity {
 
 		@Override
 		public void onLongClick(final Task task) {
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(TasksActivity.this);
 			builder.setTitle(R.string.options)
 					.setItems(R.array.optons_array, new DialogInterface.OnClickListener() {
@@ -51,7 +53,6 @@ public class TasksActivity extends AppCompatActivity {
 							if(which==0){
 								mRepository.removeTask(task);
 								updateTasksDisplay();
-
 							}else if(which==1){
 								updateTaskActivity(task.getId());
 								updateTasksDisplay();
@@ -69,6 +70,8 @@ public class TasksActivity extends AppCompatActivity {
 		@Override
 		public void onIsCompletedClick(Task task){
 			task.setCompleted(!task.isCompleted());
+			updateTasksDisplay();
+
 		}
 	};
 
@@ -82,10 +85,16 @@ public class TasksActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tasks);
-
 		ButterKnife.bind(this);
 		setUpRecyclerView();
 		updateTasksDisplay();
+		setSupportActionBar(myToolbar);
+
+	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu, menu);
+		return true;
 	}
 
 	private void setUpRecyclerView() {
@@ -112,13 +121,63 @@ public class TasksActivity extends AppCompatActivity {
 	}
 
 	private void updateTasksDisplay() {
-		List<Task> tasks = mRepository.getTasks();
+		List<Task> tasks;
+		if(sorted){
+			mRepository.getSorted();
+			if(uncompleted) {
+				tasks = mRepository.getUncompleted();
+			}else{
+				tasks = mRepository.getTasks();
+			}
+		}else{
+			if(uncompleted) {
+				tasks = mRepository.getUncompleted();
+			}else{
+				tasks = mRepository.getTasks();
+			}
+		}
 		mTaskAdapter.updateTasks(tasks);
 		for (Task t : tasks){
 			Log.d(TAG, t.getTitle());
 		}
 		mRepository.setIDs();
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+
+		switch (id) {
+
+			case R.id.menuSortItem:
+				sorted = !sorted;
+				updateTasksDisplay();
+				if(sorted) {
+					myToolbar.getMenu().findItem(R.id.menuSortItem)
+							.setTitle(R.string.unsorted);
+				}
+				else {
+					myToolbar.getMenu().findItem(R.id.menuSortItem)
+							.setTitle(R.string.sort);
+					mRepository.getTasks();
+				}
+				return true;
+
+			case R.id.menuHideCompletedItem:
+				uncompleted =!uncompleted;
+				updateTasksDisplay();
+				if(uncompleted)
+					myToolbar.getMenu().findItem(R.id.menuHideCompletedItem)
+							.setTitle(R.string.showAll);
+				else myToolbar.getMenu().findItem(R.id.menuHideCompletedItem)
+						.setTitle(R.string.showUncompleted);
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
 
 	private void toastTask(Task task) {
 		Toast.makeText(

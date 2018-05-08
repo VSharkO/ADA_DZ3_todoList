@@ -30,4 +30,5 @@ dependencies {
     implementation "com.android.support:design:$supportVersion"
     implementation "com.jakewharton:butterknife:$butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+    implementation 'com.android.support:mediarouter-v7:27.1.1'
 }
