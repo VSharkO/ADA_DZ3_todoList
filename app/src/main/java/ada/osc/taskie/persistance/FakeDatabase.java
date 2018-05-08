@@ -73,7 +73,6 @@ public class FakeDatabase {
 				mTasksUncompleted.add(taskie);
 			}
 		}
-		sortUncompleted();
 		setIDsUncompleted();
 
 		return mTasksUncompleted;
