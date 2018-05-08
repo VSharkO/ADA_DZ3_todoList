@@ -17,12 +17,7 @@ public class FakeDatabase {
 	}
 
 	public List<Task> getTasks(){
-		List<Task> allTasks = new ArrayList<>(mTasks);
-		if (mTasksUncompleted!=null){
-			allTasks.addAll(mTasksUncompleted);
-			setIDs(allTasks);
-		}
-		return allTasks;
+		return mTasks;
 	}
 
 	public Task getTask(int id){
@@ -67,6 +62,7 @@ public class FakeDatabase {
 	}
 
 	public void sortUncompleted(){
+		if (mTasksUncompleted!=null)
 		sort(mTasksUncompleted);
 	}
 

@@ -32,7 +32,7 @@ public class TasksActivity extends AppCompatActivity {
 	public static final String EXTRA_TASK = "task";
 	TaskRepository mRepository = TaskRepository.getInstance();
 	TaskAdapter mTaskAdapter;
-	boolean sorted,uncompleted;
+	boolean sorted=false,uncompleted=false;
 	@BindView(R.id.fab_tasks_addNew) FloatingActionButton mNewTask;
 	@BindView(R.id.recycler_tasks) RecyclerView mTasksRecycler;
 	@BindView(R.id.my_toolbar) Toolbar myToolbar;
@@ -52,11 +52,10 @@ public class TasksActivity extends AppCompatActivity {
 						public void onClick(DialogInterface dialog, int which) {
 							if(which==0){
 								mRepository.removeTask(task);
-								updateTasksDisplay();
 							}else if(which==1){
 								updateTaskActivity(task.getId());
-								updateTasksDisplay();
 							}
+							updateTasksDisplay();
 						}
 					}).show();
 		}
@@ -122,45 +121,37 @@ public class TasksActivity extends AppCompatActivity {
 
 	private void updateTasksDisplay() {
 		List<Task> tasks;
-		if(sorted){
+		if (sorted) {
 			mRepository.getSorted();
-			if(uncompleted) {
-				tasks = mRepository.getUncompleted();
-			}else{
-				tasks = mRepository.getTasks();
-			}
+			mRepository.getUncompletedSorted();
+		}
+		if (uncompleted) {
+			tasks = mRepository.getUncompleted();
 		}else{
-			if(uncompleted) {
-				tasks = mRepository.getUncompleted();
-			}else{
-				tasks = mRepository.getTasks();
+			tasks = mRepository.getTasks();
+		}
+
+			mTaskAdapter.updateTasks(tasks);
+			for (Task t : tasks) {
+				Log.d(TAG, t.getTitle());
 			}
+			mRepository.setIDs();
 		}
-		mTaskAdapter.updateTasks(tasks);
-		for (Task t : tasks){
-			Log.d(TAG, t.getTitle());
-		}
-		mRepository.setIDs();
-	}
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-
 		switch (id) {
-
 			case R.id.menuSortItem:
 				sorted = !sorted;
 				updateTasksDisplay();
-				if(sorted) {
+				if(sorted)
 					myToolbar.getMenu().findItem(R.id.menuSortItem)
 							.setTitle(R.string.unsorted);
-				}
-				else {
+				else
 					myToolbar.getMenu().findItem(R.id.menuSortItem)
 							.setTitle(R.string.sort);
-					mRepository.getTasks();
-				}
 				return true;
 
 			case R.id.menuHideCompletedItem:

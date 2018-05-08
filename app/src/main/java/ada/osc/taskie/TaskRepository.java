@@ -49,6 +49,10 @@ public class TaskRepository {
 		mDatabase.sortAll();
 	}
 
+	public void getUncompletedSorted(){
+		mDatabase.sortUncompleted();
+	}
+
 	public List<Task> getUncompleted() {
 		return mDatabase.getUncompleted();
 	}
