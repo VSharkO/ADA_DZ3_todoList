@@ -23,7 +23,6 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
 	private List<Task> mTasks;
 	private TaskClickListener mListener;
-	boolean showUncompleted;
 
 	public TaskAdapter(TaskClickListener listener) {
 		mListener = listener;
@@ -111,14 +110,4 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
 	}
 
-	public void showUNcompleted() {
-		if (showUncompleted) {
-			for (Task task : mTasks) {
-				if (task.isCompleted()){
-					mTasks.remove(task);
-				}
-
-			}
-		}
-	}
 }
